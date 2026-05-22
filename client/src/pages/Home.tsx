@@ -7,6 +7,8 @@
    ============================================================= */
 
 const STRIPE_URL = "https://buy.stripe.com/your-payment-link";
+// After Stripe payment, Stripe redirects to /audit?session_id={CHECKOUT_SESSION_ID}
+// The CTA below points to Stripe; Stripe's success URL should be set to your domain + /audit?session_id={CHECKOUT_SESSION_ID}
 
 const deliverables = [
   {
