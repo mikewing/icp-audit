@@ -103,9 +103,7 @@ export default function Home() {
               maxWidth: "520px",
             }}
           >
-            23 questions. Three AI-generated deliverables.
-            <br />
-            No calls. No waiting. Done in under 30 minutes.
+            Answer 23 questions. Find out exactly why your messaging isn't converting — and what to say instead.
           </p>
         </div>
 
