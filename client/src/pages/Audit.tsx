@@ -464,11 +464,12 @@ export default function Audit() {
     }
 
     setSubmitting(true);
-    // Phase 2: AI call + results page will be wired here.
-    // For now, store data and show loading state.
+    // Save payload to sessionStorage then navigate to /results
+    // The /results page picks up the payload and fires the AI call server-side.
     const payload = { answers, firstName, email };
+    sessionStorage.removeItem("icp_audit_result"); // clear any cached result
     sessionStorage.setItem("icp_audit_payload", JSON.stringify(payload));
-    // Simulate async — Phase 2 will replace this with actual AI call.
+    window.location.href = "/results";
   };
 
   // Visible questions: Q1–Q16 always, Q17–Q23 only after interstitial dismissed
