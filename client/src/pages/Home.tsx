@@ -53,19 +53,16 @@ export default function Home() {
           className="animate-fade-up"
           style={{ animationDelay: "0ms", marginBottom: "clamp(2.5rem, 6vw, 4rem)" }}
         >
-          <span
+          <img
+            src="/manus-storage/tpe-piston-lockup-white_c249a4ed.webp"
+            alt="The Purpose Engine"
             style={{
-              fontFamily: "'Space Grotesk', sans-serif",
-              fontWeight: 700,
-              fontSize: "clamp(11px, 1.4vw, 13px)",
-              letterSpacing: "0.22em",
-              textTransform: "uppercase",
-              color: "#fff",
-              opacity: 0.55,
+              height: "clamp(28px, 4vw, 38px)",
+              width: "auto",
+              display: "block",
+              opacity: 0.9,
             }}
-          >
-            The Purpose Engine
-          </span>
+          />
         </div>
 
         {/* Headline */}
