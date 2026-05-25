@@ -504,7 +504,7 @@ export default function Audit() {
         <div style={S.header}>
           <a href="/" style={{ display: "inline-block" }}>
             <img
-              src="/manus-storage/tpe-piston-lockup-white_c249a4ed.webp"
+              src="/tpe-logo.webp"
               alt="The Purpose Engine"
               style={S.logoImg}
             />

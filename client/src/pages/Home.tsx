@@ -56,7 +56,7 @@ export default function Home() {
           style={{ animationDelay: "0ms", marginBottom: "clamp(2.5rem, 6vw, 4rem)" }}
         >
           <img
-            src="/manus-storage/tpe-piston-lockup-white_c249a4ed.webp"
+            src="/tpe-logo.webp"
             alt="The Purpose Engine"
             style={{
               height: "clamp(28px, 4vw, 38px)",

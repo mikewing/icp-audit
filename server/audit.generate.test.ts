@@ -1,22 +1,35 @@
 import { describe, expect, it, vi } from "vitest";
 
-// Mock the LLM helper before importing the router
-vi.mock("./_core/llm", () => ({
-  invokeLLM: vi.fn().mockResolvedValue({
+// ---------------------------------------------------------------------------
+// Mock @anthropic-ai/sdk before importing the router
+// ---------------------------------------------------------------------------
+vi.mock("@anthropic-ai/sdk", () => {
+  const mockCreate = vi.fn().mockResolvedValue({
     id: "mock-id",
-    created: Date.now(),
-    model: "mock-model",
-    choices: [
+    type: "message",
+    role: "assistant",
+    content: [
       {
-        index: 0,
-        message: {
-          role: "assistant",
-          content: "DELIVERABLE 1: YOUR DREAM CLIENT PROFILE\nMock profile content.\n\nDELIVERABLE 2: YOUR ANTI-ICP PROFILE\nMock anti-icp content.\n\nDELIVERABLE 3: YOUR MESSAGING MIRROR\nMock messaging content.\n\nWHAT THIS MEANS FOR YOU, Jane\nMock upsell content.",
-        },
-        finish_reason: "stop",
+        type: "text",
+        text: "DELIVERABLE 1: YOUR DREAM CLIENT PROFILE\nMock profile content.\n\nDELIVERABLE 2: YOUR ANTI-ICP PROFILE\nMock anti-icp content.\n\nDELIVERABLE 3: YOUR MESSAGING MIRROR\nMock messaging content.\n\nWHAT THIS MEANS FOR YOU, Jane\nMock upsell content.",
       },
     ],
-  }),
+    model: "claude-sonnet-4-5",
+    stop_reason: "end_turn",
+    usage: { input_tokens: 100, output_tokens: 200 },
+  });
+
+  return {
+    default: vi.fn().mockImplementation(() => ({
+      messages: { create: mockCreate },
+    })),
+  };
+});
+
+// Mock Supabase writes so they don't fail in tests
+vi.mock("./supabase", () => ({
+  upsertCoach: vi.fn().mockResolvedValue("mock-coach-uuid"),
+  insertAuditResult: vi.fn().mockResolvedValue(undefined),
 }));
 
 import { appRouter } from "./routers";
@@ -24,9 +37,8 @@ import type { TrpcContext } from "./_core/context";
 
 function createPublicContext(): TrpcContext {
   return {
-    user: null,
     req: { protocol: "https", headers: {} } as TrpcContext["req"],
-    res: { clearCookie: vi.fn() } as unknown as TrpcContext["res"],
+    res: {} as TrpcContext["res"],
   };
 }
 

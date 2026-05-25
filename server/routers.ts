@@ -1,10 +1,14 @@
-import { COOKIE_NAME } from "@shared/const";
+import Anthropic from "@anthropic-ai/sdk";
 import { z } from "zod";
-import { getSessionCookieOptions } from "./_core/cookies";
-import { invokeLLM } from "./_core/llm";
-import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
 import { insertAuditResult, upsertCoach } from "./supabase";
+
+// ---------------------------------------------------------------------------
+// Anthropic client — reads ANTHROPIC_API_KEY from environment
+// ---------------------------------------------------------------------------
+const anthropic = new Anthropic({
+  apiKey: process.env.ANTHROPIC_API_KEY ?? "",
+});
 
 // ---------------------------------------------------------------------------
 // System prompt — verbatim from spec
@@ -149,16 +153,6 @@ You leave with a plan, not a pitch.`;
 // Router
 // ---------------------------------------------------------------------------
 export const appRouter = router({
-  system: systemRouter,
-  auth: router({
-    me: publicProcedure.query(opts => opts.ctx.user),
-    logout: publicProcedure.mutation(({ ctx }) => {
-      const cookieOptions = getSessionCookieOptions(ctx.req);
-      ctx.res.clearCookie(COOKIE_NAME, { ...cookieOptions, maxAge: -1 });
-      return { success: true } as const;
-    }),
-  }),
-
   audit: router({
     generate: publicProcedure
       .input(
@@ -171,16 +165,17 @@ export const appRouter = router({
       .mutation(async ({ input }) => {
         const { answers, firstName, email } = input;
 
-        const result = await invokeLLM({
+        const message = await anthropic.messages.create({
+          model: "claude-sonnet-4-5",
+          max_tokens: 4096,
+          system: SYSTEM_PROMPT,
           messages: [
-            { role: "system", content: SYSTEM_PROMPT },
             { role: "user", content: buildUserPrompt(answers, firstName) },
           ],
-          max_tokens: 4096,
         });
 
-        const content = result.choices[0]?.message?.content;
-        const text = typeof content === "string" ? content : "";
+        const block = message.content[0];
+        const text = block?.type === "text" ? block.text : "";
 
         // Write 1: upsert coach row, get UUID
         let coachId: string | null = null;
@@ -188,7 +183,6 @@ export const appRouter = router({
           coachId = await upsertCoach({ email, name: firstName });
         } catch (err) {
           console.error("[Supabase] upsertCoach failed:", err);
-          // Non-fatal: continue and return results even if DB write fails
         }
 
         // Write 2: insert audit result (rawResponses includes all form fields)
@@ -201,7 +195,6 @@ export const appRouter = router({
             });
           } catch (err) {
             console.error("[Supabase] insertAuditResult failed:", err);
-            // Non-fatal: results still returned to user
           }
         }
 

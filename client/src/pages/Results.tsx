@@ -10,7 +10,7 @@ import { useLocation } from "wouter";
 
 const STRIPE_UPSELL = "https://buy.stripe.com/14A8wOcgP6wU4zmbXWfrW02";
 const CALENDLY_LINK = "https://calendly.com/mikejwing/the-purpose-engine-audit";
-const LOGO_URL = "/manus-storage/tpe-piston-lockup-white_c249a4ed.webp";
+const LOGO_URL = "/tpe-logo.webp";
 
 // ---------------------------------------------------------------------------
 // Inline style tokens

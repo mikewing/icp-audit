@@ -51,3 +51,18 @@
 - [x] Write 2: insert icp_audit_results row (coach_id, psychographic_profile, raw_responses, submitted_at)
 - [x] Both writes happen server-side after AI generation succeeds
 - [x] Vitest test for Supabase write logic
+
+## Phase 4: Railway Migration
+- [ ] Install @anthropic-ai/sdk, remove invokeLLM usage in server/routers.ts
+- [ ] Add ANTHROPIC_API_KEY env var
+- [ ] Remove Manus OAuth from server/_core (oauth, session cookie, protectedProcedure)
+- [ ] Remove auth hooks/redirects from client pages (Audit.tsx, Results.tsx, App.tsx)
+- [ ] Remove Drizzle/MySQL packages (drizzle-orm, drizzle-kit, mysql2)
+- [ ] Delete drizzle/schema.ts, drizzle.config.ts, server/db.ts
+- [ ] Remove DATABASE_URL from all env references
+- [ ] Remove Manus-specific env vars from server/_core/env.ts and vite.config.ts
+- [ ] Create .env.example with ANTHROPIC_API_KEY, SUPABASE_URL, SUPABASE_ANON_KEY
+- [ ] Verify package.json build and start scripts work for Railway
+- [ ] Run pnpm test — all tests pass
+- [ ] TypeScript check passes (pnpm check)
+- [ ] Push to GitHub
