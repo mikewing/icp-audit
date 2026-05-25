@@ -151,6 +151,7 @@ function vitePluginManusDebugCollector(): Plugin {
 const plugins = [react(), tailwindcss(), vitePluginManusDebugCollector()];
 
 export default defineConfig({
+  base: "/icp-audit/", // <-- THIS FIXES THE BLANK SCREEN
   plugins,
   resolve: {
     alias: {
