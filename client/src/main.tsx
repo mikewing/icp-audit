@@ -28,7 +28,7 @@ queryClient.getMutationCache().subscribe(event => {
 const trpcClient = trpc.createClient({
   links: [
     httpBatchLink({
-      url: "/api/trpc",
+      url: "/icp-audit/api/trpc",
       transformer: superjson,
     }),
   ],
