@@ -166,7 +166,7 @@ export const appRouter = router({
         const { answers, firstName, email } = input;
 
         const message = await anthropic.messages.create({
-          model: "claude-sonnet-4-5",
+          model: "claude-sonnet-4-6",
           max_tokens: 4096,
           system: SYSTEM_PROMPT,
           messages: [
