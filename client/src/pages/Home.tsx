@@ -83,9 +83,9 @@ export default function Home() {
               margin: 0,
             }}
           >
-            Know exactly
+            KNOW EXACTLY
             <br />
-            who you serve.
+            WHO YOU SERVE.
           </h1>
         </div>
 
