@@ -4,6 +4,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { invokeLLM } from "./_core/llm";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
+import { insertAuditResult, upsertCoach } from "./supabase";
 
 // ---------------------------------------------------------------------------
 // System prompt — verbatim from spec
@@ -180,6 +181,29 @@ export const appRouter = router({
 
         const content = result.choices[0]?.message?.content;
         const text = typeof content === "string" ? content : "";
+
+        // Write 1: upsert coach row, get UUID
+        let coachId: string | null = null;
+        try {
+          coachId = await upsertCoach({ email, name: firstName });
+        } catch (err) {
+          console.error("[Supabase] upsertCoach failed:", err);
+          // Non-fatal: continue and return results even if DB write fails
+        }
+
+        // Write 2: insert audit result (rawResponses includes all form fields)
+        if (coachId) {
+          try {
+            await insertAuditResult({
+              coachId,
+              psychographicProfile: text,
+              rawResponses: { ...answers, _firstName: firstName, _email: email },
+            });
+          } catch (err) {
+            console.error("[Supabase] insertAuditResult failed:", err);
+            // Non-fatal: results still returned to user
+          }
+        }
 
         return { output: text, firstName, email };
       }),

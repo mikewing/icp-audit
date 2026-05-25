@@ -42,3 +42,12 @@
 ## Pending
 - [ ] Replace placeholder Stripe Payment Link URL in Home.tsx (line 9)
 - [ ] Set Stripe success URL to: https://yourdomain.com/audit?session_id={CHECKOUT_SESSION_ID}
+
+## Phase 3: Supabase Writes
+- [x] Install @supabase/supabase-js
+- [x] Store SUPABASE_URL and SUPABASE_ANON_KEY as server secrets
+- [x] Create server/supabase.ts client helper
+- [x] Write 1: upsert coach row (email, name, source="icp_audit", joined_at) → get coach UUID
+- [x] Write 2: insert icp_audit_results row (coach_id, psychographic_profile, raw_responses, submitted_at)
+- [x] Both writes happen server-side after AI generation succeeds
+- [x] Vitest test for Supabase write logic
